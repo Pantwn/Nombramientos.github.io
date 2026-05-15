@@ -176,37 +176,37 @@
 
 
     /* --- ESTILOS MÓVILES (VISTA DE TARJETA TINY ABSOLUTA) --- */
-        .mobile-view table, .mobile-view tbody { display: block !important; width: 100% !important; border: none !important; box-shadow: none !important; margin-top: 5px !important; background: transparent !important; }
-        .mobile-view thead, .mobile-view #column-visibility-container { display: none !important; }
-        .mobile-view tr { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; margin-bottom: 5px !important; border: 1px solid #d0d7de !important; border-radius: 6px !important; background-color: #fff !important; box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important; padding: 4px 6px !important; cursor: pointer !important; min-height: 35px !important; }
-        .mobile-view tr:active { background-color: #e5f4ff !important; }
+        .mobile-view #cargosTable, .mobile-view #cargosTable tbody { display: block !important; width: 100% !important; border: none !important; box-shadow: none !important; margin-top: 5px !important; background: transparent !important; }
+        .mobile-view #cargosTable thead, .mobile-view #column-visibility-container { display: none !important; }
+        .mobile-view #cargosTable tr { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; margin-bottom: 5px !important; border: 1px solid #d0d7de !important; border-radius: 6px !important; background-color: #fff !important; box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important; padding: 4px 6px !important; cursor: pointer !important; min-height: 35px !important; }
+        .mobile-view #cargosTable tr:active { background-color: #e5f4ff !important; }
         
         /* Ocultar telefono y acciones completamente en movil, pero dejar checkbox para imprimir/seleccionar */
-        .mobile-view td[data-column="4"], .mobile-view td[data-column="5"] { display: none !important; }
-        .mobile-view td:first-child { display: flex !important; align-items: center; justify-content: center; flex: 0 0 30px !important; margin-right: 5px !important; }
-        .mobile-view td:first-child input[type="checkbox"] { transform: scale(1.3); margin: 0; cursor: pointer; }
+        .mobile-view #cargosTable td[data-column="4"], .mobile-view #cargosTable td[data-column="5"] { display: none !important; }
+        .mobile-view #cargosTable td:first-child { display: flex !important; align-items: center; justify-content: center; flex: 0 0 30px !important; margin-right: 5px !important; }
+        .mobile-view #cargosTable td:first-child input[type="checkbox"] { transform: scale(1.3); margin: 0; cursor: pointer; }
 
 
 
         
         /* Reset general de celdas móviles para quitar estilos base */
-        .mobile-view td { display: block !important; padding: 0 !important; border: none !important; position: static !important; min-height: auto !important; }
-        .mobile-view td::before { display: none !important; content: none !important; } 
+        .mobile-view #cargosTable td { display: block !important; padding: 0 !important; border: none !important; position: static !important; min-height: auto !important; }
+        .mobile-view #cargosTable td::before { display: none !important; content: none !important; } 
         
         /* 1. Iglesia (3 letras) */
-        .mobile-view td[data-column="1"] { flex: 0 0 45px !important; margin-right: 8px !important; text-align: center !important; }
-        .mobile-view td[data-column="1"] .church-abbr { font-size: 10px !important; padding: 2px 4px !important; min-width: 35px !important; border-radius: 4px !important; display: inline-block !important; }
+        .mobile-view #cargosTable td[data-column="1"] { flex: 0 0 45px !important; margin-right: 8px !important; text-align: center !important; }
+        .mobile-view #cargosTable td[data-column="1"] .church-abbr { font-size: 10px !important; padding: 2px 4px !important; min-width: 35px !important; border-radius: 4px !important; display: inline-block !important; }
         
         /* 2. Cargo (Chiquito) */
-        .mobile-view td[data-column="2"] { flex: 1 !important; font-size: 10px !important; color: #666 !important; text-align: left !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
-        .mobile-view td[data-column="2"] i { display: none !important; }
+        .mobile-view #cargosTable td[data-column="2"] { flex: 1 !important; font-size: 10px !important; color: #666 !important; text-align: left !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+        .mobile-view #cargosTable td[data-column="2"] i { display: none !important; }
         
         /* 3. Votado (Nombre) */
-        .mobile-view td[data-column="3"] { flex: 1.2 !important; font-size: 12px !important; font-weight: bold !important; color: #1a5276 !important; text-align: right !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
-        .mobile-view td[data-column="3"] i { display: none !important; }
+        .mobile-view #cargosTable td[data-column="3"] { flex: 1.2 !important; font-size: 12px !important; font-weight: bold !important; color: #1a5276 !important; text-align: right !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+        .mobile-view #cargosTable td[data-column="3"] i { display: none !important; }
         
         /* Stand-by */
-        .mobile-view tr.stand-by { border-left: 4px solid #e74c3c !important; }
+        .mobile-view #cargosTable tr.stand-by { border-left: 4px solid #e74c3c !important; }
 
 
 
@@ -370,7 +370,7 @@
             
             <div class="crud-table-container">
                 <table class="crud-table" id="tableChurchesAdmin">
-                    <thead><tr><th>Iglesia</th><th>Abrev.</th><th style="width: 80px; text-align: right;">Acciones</th></tr></thead>
+                    <thead><tr><th style="width: 100%;">Iglesia</th><th>Abrev.</th><th style="width: 80px; text-align: right;">Acciones</th></tr></thead>
 
 
                     <tbody></tbody>
@@ -441,7 +441,12 @@
             
             <div class="crud-table-container">
                 <table class="crud-table" id="tableCargosAdmin">
-                    <thead><tr><th style="width: 50px;">#</th><th>Nombre del Cargo</th><th style="width: 80px; text-align: right;">Acciones</th></tr></thead>
+                    <thead><tr><th style="width: 50px;">#</th><th style="width: 100%;">Nombre del Cargo</th><th style="width: 80px; text-align: right;">Acciones</th></tr></thead>
+
+
+
+
+
 
 
                     <tbody></tbody>
@@ -452,8 +457,11 @@
             </div>
 
             <form id="formCargo" onsubmit="saveCargo(event)" style="margin-top:15px;">
-                <input type="text" id="cargo_name" placeholder="Nuevo o editar cargo..." required>
+                <input type="text" id="cargo_name" placeholder="Nuevo o editar cargo..." required oninput="filterCargosTable()">
                 <button type="submit" id="btnSaveCargo"><i class="fas fa-save"></i> Guardar Cargo</button>
+
+
+
                 <button type="button" onclick="cancelEditCargo()" id="btnCancelCargo" style="display:none; background-color:#7f8c8d; margin-top:10px;"><i class="fas fa-times"></i> Cancelar Edición</button>
             </form>
         </div>
@@ -481,7 +489,7 @@
             "Conteo Rapido", "Sub. Aventureros", "Secretario Aventureros", "Sub. Canto", 
             "Tesorero Aventureros", "Sub. Conquistadores", "Secretario Conquistadores", 
             "Sub. Construccion", "Sub. Juvenil", "Sub. E. Sab", "Sec. E. Sab", 
-            "Tesorero Conquistadores", "Miembro de Iglesia", "Sonido y Proyeccion"
+            "Tesorero Conquistadores", "Miembro de Iglesia", "Maestra de Adolescentes", "Sub. Min. Infantil y Adolescente", "Maestra de Principiantes", "Sonido y Proyeccion"
         ];
 
 
@@ -756,7 +764,9 @@
                 isDirective: isDirective(document.getElementById('m_cargo').value)
             };
 
+            let isEditing = false;
             if (currentEditMemberId) {
+                isEditing = true;
                 payload.id = currentEditMemberId;
                 const index = globalData.members.findIndex(m => m.id === currentEditMemberId);
                 if (index !== -1) {
@@ -769,10 +779,21 @@
             }
             
             await saveDataToGist();
+            const savedChurch = document.getElementById('m_church').value;
             document.getElementById('formMember').reset();
-            closeModal('modalNewMember');
+            
+            // Si estamos editando cerramos el popup, si es uno nuevo se queda abierto en "Cargo"
+            if (isEditing) {
+                closeModal('modalNewMember');
+            } else {
+                document.getElementById('m_church').value = savedChurch;
+                document.getElementById('m_cargo').focus();
+            }
             renderTable();
         }
+
+
+
 
 
 
@@ -870,10 +891,10 @@
                 "Dir. Diaconos", "Dir. Diaconisas", "Dir. Escuela Sabatica", "Dir. Min. Mujer", 
                 "Dir. Min. Juvenil", "Dir. Min. Infantil y Adolescente",
                 "Dir. Min. Salud", "Dir. Vida Familiar", "Dir. Canto", "Dir. Publicaciones", 
-                "Dir. Min. Personales", "Dir. Mayordomia", "Dir. Recepcion", "Dir. Dorcas", 
+                "Dir. Min. Personales", "Dir. Mayordomia", "Dir. Recepcion", "Dir. Jóvenes", "Dir. Dorcas", 
                 "Dir. Comunicacion", "DIR. EBV", "Construccion"
             ];
-            const supportKeywords = ["DIACONO", "DIACONISA", "Auditor", "AUXILIAR", "MAESTRO E. S.", "SUB. DIR. E. S.", "SECRETARIA E. S.", "MAESTRA DE CUNA", "MAESTRA DE INFANTES", "MAESTRA DE JARDIN", "MAESTRA DE PRIMARIOS", "MAESTRA DE MENORES", "JOVENES", "Tesorero Juvenil", "Maestro E.S.", "Maestro E. Sabatica", "Ayudante", "Secretario Juvenil", "Sec. Esc. Sabatica", "Sub. Dir. Min. Infantil y Adolescente", "SECRETARIO JA", "Secretaria Min. Juvenil", "Sub. Dir. Min. Juvenil", "VOCAL A", "Sub. M. Mujer", "Sub. Salud", "Sub. Mayordomia", "CONTEO RAPIDO", "Sub. Aventureros", "Secretario Aventureros", "Sub. Canto", "Tesorero Aventureros", "Sub. Conquistadores", "Secretario Conquistadores", "Sub. Construccion","Sub. Juvenil", "Sub. E. Sab", "Sec. E. Sab", "Tesorero Conquistadores", "Miembro de Iglesia","SONIDO Y PROYECCION"];
+            const supportKeywords = ["DIACONO", "DIACONISA", "Auditor", "AUXILIAR", "MAESTRO E. S.", "SUB. DIR. E. S.", "Secre. Escuela Sabatica", "MAESTRA DE CUNA", "MAESTRA DE INFANTES", "MAESTRA DE JARDIN", "MAESTRA DE PRIMARIOS", "MAESTRA DE MENORES", "JOVENES", "Tesorero Juvenil", "Maestro E.S.", "Maestro E. Sabatica", "Ayudante", "Secretario Juvenil", "Sec. Esc. Sabatica", "Sub. Dir. Min. Infantil y Adolescente", "SECRETARIO JA", "Secretaria Min. Juvenil", "Maestra de Principiantes", "Maestra de Adolescentes", "Sub. Dir. Min. Juvenil", "VOCAL A", "Sub. M. Mujer", "Sub. Salud", "Sub. Mayordomia", "CONTEO RAPIDO", "Sub. Aventureros", "Secretario Aventureros", "Sub. Canto", "Tesorero Aventureros", "Sub. Min. Infantil y Adolescente", "Sub. Min. Personales", "Sub. Vida Familiar",  "Secre. Min. Personales", "Sub. EBV", "Sub. Conquistadores", "Secretario Conquistadores", "Sub. Construccion","Sub. Juvenil", "Sub. E. Sab", "Sec. E. Sab", "Tesorero Conquistadores", "Miembro de Iglesia","SONIDO Y PROYECCION"];
             
             const normalizedCargo = normalizeText(cargo);
             if (directiveCargos.includes(cargo)) return true;
@@ -1035,9 +1056,27 @@
             cancelEditCargo();
             renderCargosManager();
             openModal('modalManageCargos');
+            setTimeout(() => document.getElementById('cargo_name').focus(), 100);
+        }
+
+        function filterCargosTable() {
+            const input = document.getElementById('cargo_name');
+            const searchTerms = normalizeText(input.value).split(/\s+/).filter(word => word.length > 0);
+            const rows = document.querySelectorAll('#tableCargosAdmin tbody tr');
+            rows.forEach(row => {
+                const cargoText = normalizeText(row.children[1].textContent);
+                if (searchTerms.length === 0 || searchTerms.every(term => cargoText.includes(term))) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
         }
 
         function renderCargosManager() {
+
+
+
             const tbody = document.querySelector('#tableCargosAdmin tbody');
             tbody.innerHTML = '';
             const list = globalData.cargos && globalData.cargos.length > 0 ? globalData.cargos : DEFAULT_CARGOS;
@@ -1142,7 +1181,11 @@
             document.getElementById('formCargo').reset();
             document.getElementById('btnSaveCargo').innerHTML = '<i class="fas fa-save"></i> Guardar Cargo';
             document.getElementById('btnCancelCargo').style.display = 'none';
+            filterCargosTable();
         }
+
+
+
 
         async function deleteCargo(index) {
             if (confirm("¿Eliminar este cargo de la lista disponible?")) {
@@ -1263,40 +1306,50 @@
                 event.preventDefault(); searchInput.focus(); return;
             }
 
+            // Extractor infalible para el Teclado Numérico (Numpad) aunque NumLock esté apagado
+            const getNum = (e) => {
+                if (e.code && e.code.startsWith('Numpad') && e.code.length === 7) return e.code[6];
+                if (e.key >= '0' && e.key <= '9') return e.key;
+                return null;
+            };
+
             // ATAJOS CON ALT (Ignora si estás escribiendo texto)
             if (event.altKey && !isTextInput) {
-                if (event.key === '+') { event.preventDefault(); currentEditMemberId = null; document.getElementById('formMember').reset(); openModal('modalNewMember'); return; }
-                if (event.key.toLowerCase() === 'i') { event.preventDefault(); openManageChurches(); return; }
-                if (event.key.toLowerCase() === 'c') { event.preventDefault(); openManageCargos(); return; }
-                if (event.key.toLowerCase() === 'p') { event.preventDefault(); window.printChurchList(); return; }
-                if (event.key === '-') { event.preventDefault(); toggleMobileView(); return; }
-                
-                if (event.key === '0') {
-                    event.preventDefault();
-                    columnCheckboxes.forEach(cb => cb.checked = false);
-                    updateColumnVisibility(); return;
-                }
-                if (event.key === '.') {
+                if (event.key === '+' || event.code === 'NumpadAdd') { event.preventDefault(); currentEditMemberId = null; document.getElementById('formMember').reset(); openModal('modalNewMember'); return; }
+                if (event.key === '-' || event.code === 'NumpadSubtract') { event.preventDefault(); toggleMobileView(); return; }
+                if (event.key === '.' || event.code === 'NumpadDecimal') {
                     event.preventDefault();
                     columnCheckboxes.forEach(cb => cb.checked = true);
                     updateColumnVisibility(); return;
                 }
-                if (event.key >= '1' && event.key <= '5') {
+                
+                let numAlt = getNum(event);
+                if (numAlt === '0') {
                     event.preventDefault();
-                    const cb = document.querySelector(`#column-visibility-container input[data-column="${event.key}"]`);
+                    columnCheckboxes.forEach(cb => cb.checked = false);
+                    updateColumnVisibility(); return;
+                }
+                if (numAlt >= '1' && numAlt <= '5') {
+                    event.preventDefault();
+                    const cb = document.querySelector(`#column-visibility-container input[data-column="${numAlt}"]`);
                     if (cb) { cb.checked = !cb.checked; updateColumnVisibility(); }
                     return;
                 }
+
+                if (event.key.toLowerCase() === 'i') { event.preventDefault(); openManageChurches(); return; }
+                if (event.key.toLowerCase() === 'c') { event.preventDefault(); openManageCargos(); return; }
+                if (event.key.toLowerCase() === 'p') { event.preventDefault(); window.printChurchList(); return; }
             }
 
             // ATAJOS CON WIN (Meta key)
             if (event.metaKey && !isTextInput) {
-                if (event.key === '0') {
+                let numWin = getNum(event);
+                if (numWin === '0') {
                     event.preventDefault(); churchFilter.value = 'Todas'; renderTable(); return;
                 }
-                if (event.key >= '1' && event.key <= '9') {
+                if (numWin >= '1' && numWin <= '9') {
                     event.preventDefault();
-                    const index = parseInt(event.key) - 1;
+                    const index = parseInt(numWin) - 1;
                     if (globalData.churches && globalData.churches.length > index) {
                         churchFilter.value = globalData.churches[index].name;
                         renderTable();
@@ -1305,6 +1358,9 @@
                 }
             }
         });
+
+
+
 
 
 
