@@ -166,6 +166,12 @@
         .crud-action-btn { background: none; border: none; cursor: pointer; font-size: 1.1em; margin: 0 3px; }
         .crud-btn-edit { color: #3498db; }
         .crud-btn-del { color: #e74c3c; }
+        .drag-handle { cursor: grab; color: #888; font-size: 1.2em; touch-action: none; vertical-align: middle; }
+        .dragging { opacity: 0.5; background-color: #e5f4ff !important; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .cargo-number { font-weight: bold; color: #2e86c1; display: inline-block; width: 20px; font-size: 1.1em; }
+
+
+
 
 
 
@@ -435,10 +441,13 @@
             
             <div class="crud-table-container">
                 <table class="crud-table" id="tableCargosAdmin">
-                    <thead><tr><th>Nombre del Cargo</th><th style="width: 80px; text-align: right;">Acciones</th></tr></thead>
+                    <thead><tr><th style="width: 50px;">#</th><th>Nombre del Cargo</th><th style="width: 80px; text-align: right;">Acciones</th></tr></thead>
 
 
                     <tbody></tbody>
+
+
+
                 </table>
             </div>
 
@@ -548,8 +557,8 @@
                     div.innerHTML = `<span>${match}</span><span class="cargo-count" title="Cargos actuales">${personasEnIglesia[match].count}</span>`;
                     div.onclick = function() {
                         input.value = match;
-                        document.getElementById('m_phone').value = personasEnIglesia[match].phone !== "SIN TELÉFONO" ? personasEnIglesia[match].phone : "";
-                        document.getElementById('m_email').value = personasEnIglesia[match].email !== "FALTA EMAIL" ? personasEnIglesia[match].email : "";
+                        document.getElementById('m_phone').value = personasEnIglesia[match].phone !== "" ? personasEnIglesia[match].phone : "";
+                        document.getElementById('m_email').value = personasEnIglesia[match].email !== "" ? personasEnIglesia[match].email : "";
                         document.getElementById('m_isStandBy').checked = personasEnIglesia[match].standBy;
                         list.style.display = 'none';
                     };
@@ -741,8 +750,8 @@
                 church: document.getElementById('m_church').value,
                 cargo: document.getElementById('m_cargo').value,
                 votado: document.getElementById('m_name').value,
-                phone: document.getElementById('m_phone').value || "SIN TELÉFONO",
-                email: document.getElementById('m_email').value || "FALTA EMAIL",
+                phone: document.getElementById('m_phone').value || "",
+                email: document.getElementById('m_email').value || "",
                 standBy: document.getElementById('m_isStandBy').checked,
                 isDirective: isDirective(document.getElementById('m_cargo').value)
             };
@@ -837,6 +846,17 @@
                 event.target.style.display = "none";
             }
         }
+
+        window.ondblclick = function(event) {
+            const noCerrar = ['INPUT', 'BUTTON', 'SELECT', 'A', 'TEXTAREA'];
+            if (noCerrar.includes(event.target.tagName)) return; // No cerrar si dan doble clic a un botón o input
+            if (event.target.closest('.modal-content') || event.target.classList.contains('modal')) {
+                document.querySelectorAll('.modal').forEach(m => m.style.display = "none");
+            }
+        }
+
+
+
 
         // --- LÓGICA DE NEGOCIO (Antigua) ---
         function normalizeText(text) {
@@ -940,7 +960,22 @@
                 return keywords.every(keyword => combinedText.includes(keyword));
             });
 
+            // ORDEN POR DEFECTO: Primero por Iglesia (A-Z), luego por tu orden personalizado de Cargos
+            filteredData.sort((a, b) => {
+                if (a.church < b.church) return -1;
+                if (a.church > b.church) return 1;
+                
+                const indexA = globalData.cargos.indexOf(a.cargo);
+                const indexB = globalData.cargos.indexOf(b.cargo);
+                const sortA = indexA === -1 ? 9999 : indexA;
+                const sortB = indexB === -1 ? 9999 : indexB;
+                return sortA - sortB;
+            });
+
             filteredData.forEach(item => {
+
+
+
                 const meta = globalData.churches.find(c => c.name === item.church) || {abbr: 'N/A', bg: '#ccc', text: '#000'};
                 const row = document.createElement('tr');
                 
@@ -1008,7 +1043,8 @@
             const list = globalData.cargos && globalData.cargos.length > 0 ? globalData.cargos : DEFAULT_CARGOS;
             list.forEach((cargo, index) => {
                 tbody.innerHTML += `
-                    <tr>
+                    <tr draggable="true" data-index="${index}" class="draggable-row">
+                        <td><i class="fas fa-grip-lines drag-handle" title="Arrastra para ordenar"></i> <span class="cargo-number">${index + 1}</span></td>
                         <td>${cargo}</td>
                         <td style="text-align: right; white-space: nowrap;">
                             <button class="crud-action-btn crud-btn-edit" type="button" onclick="editCargo(${index})"><i class="fas fa-edit"></i></button>
@@ -1016,13 +1052,67 @@
                         </td>
                     </tr>
                 `;
-
-
-
             });
+            setupDragAndDrop();
         }
 
+        function setupDragAndDrop() {
+            const tbody = document.querySelector('#tableCargosAdmin tbody');
+            let draggedRow = null;
+
+            tbody.querySelectorAll('.draggable-row').forEach(row => {
+                row.addEventListener('dragstart', function() { draggedRow = row; setTimeout(() => row.classList.add('dragging'), 0); });
+                row.addEventListener('dragend', async function() { row.classList.remove('dragging'); await updateCargoOrder(); });
+                row.addEventListener('touchstart', function(e) { if(e.target.closest('.drag-handle')) { draggedRow = row; row.classList.add('dragging'); } }, {passive: true});
+                row.addEventListener('touchmove', function(e) {
+                    if (!draggedRow) return;
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const overRow = element ? element.closest('.draggable-row') : null;
+                    if (overRow && overRow !== draggedRow) {
+                        const rect = overRow.getBoundingClientRect();
+                        const next = (touch.clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
+                        tbody.insertBefore(draggedRow, next ? overRow.nextSibling : overRow);
+                    }
+                }, {passive: false});
+                row.addEventListener('touchend', async function() { if(draggedRow) { draggedRow.classList.remove('dragging'); draggedRow = null; await updateCargoOrder(); } });
+            });
+
+            // Usamos ondragover en lugar de addEventListener para no duplicar eventos al redibujar
+            tbody.ondragover = function(e) {
+                e.preventDefault();
+                const overRow = e.target.closest('.draggable-row');
+                if (overRow && draggedRow !== overRow) {
+                    const rect = overRow.getBoundingClientRect();
+                    const next = (e.clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
+                    tbody.insertBefore(draggedRow, next ? overRow.nextSibling : overRow);
+                }
+            };
+        }
+
+        async function updateCargoOrder() {
+            const tbody = document.querySelector('#tableCargosAdmin tbody');
+            const newOrder = [];
+            tbody.querySelectorAll('.draggable-row').forEach(row => {
+                // Leemos el texto de la segunda columna (el nombre del cargo) directamente,
+                // esto evita que los índices se crucen y dupliquen información.
+                const cargoName = row.children[1].textContent.trim();
+                newOrder.push(cargoName);
+            });
+            globalData.cargos = newOrder;
+            await saveDataToGist();
+            renderCargosManager(); 
+            renderTable(); 
+        }
+
+
+
+
         async function saveCargo(e) {
+
+
+
             e.preventDefault();
             const newName = document.getElementById('cargo_name').value.trim();
             if(!newName) return;
@@ -1144,8 +1234,17 @@
 
         // --- LISTENERS ---
         document.addEventListener('keydown', (event) => {
+            const isTextInput = document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'SELECT';
+
             if (event.key === 'Escape') {
                 event.preventDefault();
+                // Prioridad: Cerrar popups si hay alguno abierto
+                let modalsAbiertos = Array.from(document.querySelectorAll('.modal')).filter(m => m.style.display === 'block');
+                if (modalsAbiertos.length > 0) {
+                    modalsAbiertos.forEach(m => m.style.display = 'none');
+                    return;
+                }
+                
                 const currentTime = new Date().getTime();
                 if ((currentTime - lastEscapePress < 300)) {
                     searchInput.value = ''; churchFilter.value = 'Todas';
@@ -1159,12 +1258,56 @@
                 }
                 return;
             }
-            if (event.key === 'Backspace') {
-                const focusedElement = document.activeElement;
-                const isTextInput = focusedElement.tagName === 'INPUT' || focusedElement.tagName === 'TEXTAREA' || focusedElement.tagName === 'SELECT';
-                if (!isTextInput) { event.preventDefault(); searchInput.focus(); }
+
+            if (event.key === 'Backspace' && !isTextInput) {
+                event.preventDefault(); searchInput.focus(); return;
+            }
+
+            // ATAJOS CON ALT (Ignora si estás escribiendo texto)
+            if (event.altKey && !isTextInput) {
+                if (event.key === '+') { event.preventDefault(); currentEditMemberId = null; document.getElementById('formMember').reset(); openModal('modalNewMember'); return; }
+                if (event.key.toLowerCase() === 'i') { event.preventDefault(); openManageChurches(); return; }
+                if (event.key.toLowerCase() === 'c') { event.preventDefault(); openManageCargos(); return; }
+                if (event.key.toLowerCase() === 'p') { event.preventDefault(); window.printChurchList(); return; }
+                if (event.key === '-') { event.preventDefault(); toggleMobileView(); return; }
+                
+                if (event.key === '0') {
+                    event.preventDefault();
+                    columnCheckboxes.forEach(cb => cb.checked = false);
+                    updateColumnVisibility(); return;
+                }
+                if (event.key === '.') {
+                    event.preventDefault();
+                    columnCheckboxes.forEach(cb => cb.checked = true);
+                    updateColumnVisibility(); return;
+                }
+                if (event.key >= '1' && event.key <= '5') {
+                    event.preventDefault();
+                    const cb = document.querySelector(`#column-visibility-container input[data-column="${event.key}"]`);
+                    if (cb) { cb.checked = !cb.checked; updateColumnVisibility(); }
+                    return;
+                }
+            }
+
+            // ATAJOS CON WIN (Meta key)
+            if (event.metaKey && !isTextInput) {
+                if (event.key === '0') {
+                    event.preventDefault(); churchFilter.value = 'Todas'; renderTable(); return;
+                }
+                if (event.key >= '1' && event.key <= '9') {
+                    event.preventDefault();
+                    const index = parseInt(event.key) - 1;
+                    if (globalData.churches && globalData.churches.length > index) {
+                        churchFilter.value = globalData.churches[index].name;
+                        renderTable();
+                    }
+                    return;
+                }
             }
         });
+
+
+
 
         searchInput.addEventListener('input', renderTable);
         churchFilter.addEventListener('change', renderTable);
@@ -1179,7 +1322,14 @@
         tbody.addEventListener('change', function(event) { if (event.target.type === 'checkbox') updateWhatsappButton(); });
 
         // --- ARRANQUE ---
-        window.onload = loadData;
+        window.onload = async function() {
+            await loadData();
+            const esMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 800;
+            if (esMovil && !isMobileViewActive) toggleMobileView();
+        };
+
+
+
     </script>
 </body>
 </html>
